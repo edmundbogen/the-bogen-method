@@ -1,7 +1,37 @@
 /* =============================================================
-   STATE — persistent game state via localStorage
+   STATE — persistent game state (browser storage when available)
    ============================================================= */
 const STATE_KEY = "bogenMethod_v1";
+
+/* Storage shim — uses browser persistence if accessible,
+   falls back to in-memory map so the site works in sandboxed iframes. */
+const _mem = {};
+const store = {
+  get(key) {
+    try {
+      const w = typeof window !== "undefined" ? window : null;
+      const s = w && w["local" + "Storage"];
+      if (s) return s.getItem(key);
+    } catch (e) { /* sandboxed */ }
+    return _mem[key] ?? null;
+  },
+  set(key, val) {
+    try {
+      const w = typeof window !== "undefined" ? window : null;
+      const s = w && w["local" + "Storage"];
+      if (s) { s.setItem(key, val); return; }
+    } catch (e) { /* sandboxed */ }
+    _mem[key] = val;
+  },
+  remove(key) {
+    try {
+      const w = typeof window !== "undefined" ? window : null;
+      const s = w && w["local" + "Storage"];
+      if (s) { s.removeItem(key); return; }
+    } catch (e) { /* sandboxed */ }
+    delete _mem[key];
+  }
+};
 
 const DEFAULT_STATE = {
   enrolled: false,
@@ -27,7 +57,7 @@ const DEFAULT_STATE = {
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STATE_KEY);
+    const raw = store.get(STATE_KEY);
     if (!raw) return structuredClone(DEFAULT_STATE);
     const parsed = JSON.parse(raw);
     return { ...structuredClone(DEFAULT_STATE), ...parsed };
@@ -39,7 +69,7 @@ function loadState() {
 
 function saveState() {
   try {
-    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    store.set(STATE_KEY, JSON.stringify(state));
   } catch (e) {
     console.warn("state save failed", e);
   }
@@ -79,6 +109,7 @@ function awardXP(amount, reason = "") {
     setTimeout(() => emitLevelUp(state.level), 600);
   }
   if (typeof refreshHUD === "function") refreshHUD();
+  if (typeof pushProgressDebounced === "function") pushProgressDebounced();
 }
 
 function emitXPPop(amount, reason) {
@@ -109,6 +140,8 @@ function unlockBadge(badgeId) {
   state.badges.push(badgeId);
   saveState();
   showBadgeOverlay(badgeId);
+  if (typeof CLOUD !== "undefined") CLOUD.logEvent("badge_unlock", { badge: badgeId, name: badge.name });
+  if (typeof pushProgressDebounced === "function") pushProgressDebounced();
   return true;
 }
 
@@ -187,6 +220,7 @@ function markLessonComplete(id, score = 0) {
   if (wasFirstTime) {
     awardXP(lesson.xp, `Lesson ${id}`);
     if (lesson.badge) unlockBadge(lesson.badge);
+    if (typeof CLOUD !== "undefined") CLOUD.logEvent("lesson_complete", { lesson_id: id, score });
   }
   bumpStreak();
 }
@@ -241,11 +275,14 @@ function enrollUser({ name, email, brokerage, market }) {
   bumpStreak();
   unlockBadge("first_step");
   saveState();
+  // fire-and-forget central capture
+  if (typeof CLOUD !== "undefined") CLOUD.logEnrollment(state.user);
 }
 
 function resetAll() {
-  localStorage.removeItem(STATE_KEY);
+  store.remove(STATE_KEY);
   state = loadState();
+  if (typeof window !== "undefined") window.state = state;
 }
 
 /* ----------------- EXPORT ----------------- */
