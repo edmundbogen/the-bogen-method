@@ -107,6 +107,15 @@
               <span>I'd like Edmund's Mastermind to send me Claude Code tips and event invites. Unsubscribe anytime.</span>
             </label>
 
+            <!-- Honeypot — hidden from humans; bots fill it and get silently dropped. -->
+            <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden">
+              <label for="company_url">Company website (leave blank)</label>
+              <input id="company_url" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <!-- Cloudflare Turnstile renders here only when a site key is set in config.js -->
+            <div id="cf-turnstile-slot" style="margin:6px 0 4px"></div>
+
             <button id="enrollBtn" type="submit" class="btn btn--primary btn--full">
               <span>Start Episode 1</span>
               <span class="btn-arrow">→</span>

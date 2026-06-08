@@ -272,7 +272,7 @@ function saveToVault(item) {
 }
 
 /* ----------------- ENROLLMENT ----------------- */
-function enrollUser({ name, email, brokerage, market }) {
+function enrollUser({ name, email, brokerage, market }, opts = {}) {
   state.enrolled = true;
   state.user = { name, email, brokerage, market };
   state.enrolledAt = Date.now();
@@ -280,8 +280,9 @@ function enrollUser({ name, email, brokerage, market }) {
   bumpStreak();
   unlockBadge("first_step");
   saveState();
-  // fire-and-forget central capture
-  if (typeof CLOUD !== "undefined") CLOUD.logEnrollment(state.user);
+  // Central capture. Skipped when the verified endpoint already stored the lead
+  // (Turnstile path) so we don't double-write.
+  if (!opts.skipCloud && typeof CLOUD !== "undefined") CLOUD.logEnrollment(state.user);
 }
 
 function resetAll() {

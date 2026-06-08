@@ -88,13 +88,33 @@ function boot() {
     app.hidden = true;
   }
 
-  form.addEventListener("submit", (e) => {
+  // Cloudflare Turnstile — only loads/renders when a site key is configured.
+  const turnstileOn = typeof TURNSTILE_SITE_KEY === "string" && TURNSTILE_SITE_KEY.length > 0;
+  if (turnstileOn) {
+    window.onloadTurnstile = () => {
+      try {
+        window.turnstile.render("#cf-turnstile-slot", { sitekey: TURNSTILE_SITE_KEY, theme: "dark" });
+      } catch (e) { /* widget already rendered */ }
+    };
+    const s = document.createElement("script");
+    s.src = "https://challenges.cloudflare.com/turnstile/api.js?onload=onloadTurnstile&render=explicit";
+    s.async = true;
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const name = document.getElementById("fullName").value.trim();
     const email = document.getElementById("email").value.trim();
     const brokerage = document.getElementById("brokerage").value.trim();
     const market = document.getElementById("market").value.trim();
     const consent = document.getElementById("consent").checked;
+
+    // Honeypot — bots fill this hidden field; real users never see it.
+    const hp = document.getElementById("company_url");
+    if (hp && hp.value) { setTimeout(() => showApp(), 200); return; } // silently no-op
+
     let bad = false;
     if (name.length < 2) {
       document.getElementById("fullName").setAttribute("aria-invalid", "true");
@@ -109,7 +129,27 @@ function boot() {
       bad = true;
     }
     if (bad) return;
-    enrollUser({ name, email, brokerage, market });
+
+    if (turnstileOn) {
+      const token = window.turnstile && window.turnstile.getResponse ? window.turnstile.getResponse() : "";
+      if (!token) {
+        toast("Please complete the verification box to start.", "error");
+        return;
+      }
+      const btn = document.getElementById("enrollBtn");
+      if (btn) btn.disabled = true;
+      const ok = await CLOUD.captureViaEndpoint({ name, email, brokerage, market }, token);
+      if (btn) btn.disabled = false;
+      if (!ok) {
+        toast("Verification failed — please try again.", "error");
+        if (window.turnstile) window.turnstile.reset();
+        return;
+      }
+      enrollUser({ name, email, brokerage, market }, { skipCloud: true }); // backend already stored it
+    } else {
+      enrollUser({ name, email, brokerage, market }); // direct capture (honeypot-protected)
+    }
+
     sfxLevelUp();
     setTimeout(() => showApp(), 200);
   });

@@ -17,3 +17,15 @@ const SUPABASE_ANON_KEY = "sb_publishable_74XKVNiTglA0SDR_MJZ2ww_Ku0JcGeL";
    these leads don't mix with Egret Cove / AEO guide submissions.
    ============================================================= */
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mlgavjvz";
+
+/* =============================================================
+   SPAM PROTECTION
+   - Honeypot is always on (hidden field; no config needed).
+   - Cloudflare Turnstile: paste your PUBLIC site key below to turn it on.
+     When set, the gate routes enrollment through the verified backend
+     endpoint (/api/method-enroll on bogen.ai) which checks the token
+     server-side. Empty = Turnstile off, honeypot still active.
+     Create a free widget at https://dash.cloudflare.com → Turnstile.
+   ============================================================= */
+const TURNSTILE_SITE_KEY = ""; // e.g. "0x4AAAAAAA..."  (public — safe to commit)
+const ENROLL_ENDPOINT = "/api/method-enroll"; // bogen.ai backend (verifies Turnstile + stores + emails)

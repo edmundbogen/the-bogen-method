@@ -75,7 +75,32 @@ const CLOUD = (() => {
   }
 
   return {
-    /* Called once when student submits the gate */
+    /* Verified capture path: POST to the bogen.ai backend, which checks the
+       honeypot + Turnstile token server-side before storing/emailing the lead.
+       Returns true on success, false if verification failed (so the gate can
+       ask the user to retry). Used when TURNSTILE_SITE_KEY is configured. */
+    async captureViaEndpoint(user, token) {
+      const ep = (typeof ENROLL_ENDPOINT === "string" && ENROLL_ENDPOINT) || "/api/method-enroll";
+      try {
+        const r = await fetch(ep, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            name: user.name, email: user.email, brokerage: user.brokerage,
+            market: user.market, consent: true, turnstileToken: token,
+            referrer: document.referrer || "",
+          }),
+        });
+        if (!r.ok) return false;
+        const data = await r.json().catch(() => ({}));
+        return data.success !== false;
+      } catch (e) {
+        console.debug("verified capture failed", e);
+        return false;
+      }
+    },
+
+    /* Called once when student submits the gate (direct path / Turnstile off) */
     async logEnrollment(user) {
       // Plain insert — RLS allows INSERT for anon.
       // Duplicate email returns 409, which we ignore (returning student).
