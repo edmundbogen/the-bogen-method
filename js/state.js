@@ -226,15 +226,20 @@ function markLessonComplete(id, score = 0) {
 }
 
 /* ----------------- STREAK ----------------- */
+// Local-date YYYY-MM-DD (NOT UTC) so the day rolls over at the student's
+// midnight, not at 7-8pm Eastern the way toISOString() would.
+function localISO(d = new Date()) {
+  const off = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - off).toISOString().slice(0, 10);
+}
 function todayISO() {
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
+  return localISO();
 }
 
 function bumpStreak() {
   const today = todayISO();
   if (state.lastActiveDate === today) return;
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const yesterday = localISO(new Date(Date.now() - 86400000));
   if (state.lastActiveDate === yesterday) state.streak += 1;
   else state.streak = 1;
   state.lastActiveDate = today;

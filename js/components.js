@@ -209,7 +209,7 @@ function renderQuiz(quiz, lessonId) {
           <div class="quiz-progress" data-progress>Question 1 / ${quiz.questions.length}</div>
         </div>
         <div class="quiz-timer" data-timer>
-          <span class="muted" style="font-size:.78rem">15s</span>
+          <span class="muted" style="font-size:.78rem">18s</span>
           <div class="quiz-timer-bar"><div class="quiz-timer-fill" data-timerfill></div></div>
         </div>
       </div>

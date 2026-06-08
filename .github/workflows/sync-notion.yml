@@ -1,0 +1,28 @@
+name: Sync enrollees to Notion
+
+# Pulls Bogen Method enrollees from Supabase and upserts them into the
+# Bogen.ai + Mastermind "People" CRM as Prospects (Source = Bogen Method).
+# Deduped by email, safe to re-run.
+#
+# Requires two repo secrets (Settings → Secrets and variables → Actions):
+#   SUPABASE_SERVICE_KEY  — Supabase service_role key
+#   NOTION_TOKEN          — Notion internal integration token
+
+on:
+  schedule:
+    - cron: "0 12 * * *"   # daily at 12:00 UTC (~7-8am Eastern)
+  workflow_dispatch: {}     # lets you run it on demand from the Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run enrollment → Notion sync
+        env:
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: python3 scripts/sync_enrollments_to_notion.py
