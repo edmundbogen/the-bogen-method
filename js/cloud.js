@@ -28,6 +28,34 @@ const CLOUD = (() => {
     }
   }
 
+  /* Instant email alert to Edmund's inbox via Formspree.
+     Browser-safe (public form ID), fire-and-forget. This is the
+     lead-capture path — Supabase is the durable store, Formspree
+     is the real-time "you've got a lead" ping + Notion-sync source. */
+  async function notifyLead(user) {
+    const endpoint = typeof FORMSPREE_ENDPOINT === "string" ? FORMSPREE_ENDPOINT : "";
+    if (!endpoint.startsWith("http")) return;
+    try {
+      await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: `🎓 New Bogen Method enrollee: ${user.name || "Unknown"}`,
+          source: "the-bogen-method",
+          name: user.name || "",
+          email: user.email || "",
+          brokerage: user.brokerage || "",
+          market: user.market || "",
+          enrolled_at: new Date().toISOString(),
+          referrer: (document.referrer || "direct").slice(0, 240),
+        }),
+        keepalive: true,
+      });
+    } catch (e) {
+      console.debug("lead notify failed", e);
+    }
+  }
+
   async function upsert(path, body, onConflict) {
     if (!ok) return;
     try {
@@ -64,6 +92,8 @@ const CLOUD = (() => {
         },
       );
       await this.logEvent("enroll", { name: user.name, market: user.market, brokerage: user.brokerage });
+      // Real-time lead alert to Edmund's inbox (+ feeds the Notion sync).
+      await notifyLead(user);
     },
 
     /* Called whenever the student earns XP, finishes a lesson, etc */
