@@ -14,10 +14,19 @@ Nothing to run. It just works once the site is deployed.
 > (also used by Egret Cove + the AEO guide). Create a **dedicated** Bogen
 > Method form in Formspree and swap the ID so leads don't mix.
 
-### 2. Notion CRM sync (durable, deduped)
-`sync_enrollments_to_notion.py` reads every enrollment from Supabase and
-upserts it into the Bogen.ai + Mastermind **People** DB as a **Prospect**
-(Source = *Bogen Method*), deduped by email. Safe to re-run.
+### 2. Notion CRM sync + progress enrichment (durable, deduped)
+`sync_enrollments_to_notion.py` does two things, deduped by email, safe to re-run:
+
+1. **Enrollments → Prospects.** Every enrollee becomes a contact in the
+   Bogen.ai + Mastermind **People** DB (Role = Prospect, Source = *Bogen Method*).
+2. **Progress → score on the contact.** Pulls the `progress` table and writes
+   each player's live course score onto their record:
+   **Course XP · Course Level · Lessons Done · Course Status**
+   (Enrolled / In Progress / Completed) **· Course Last Active**.
+
+So a contact shows not just that they signed up, but how far they got — you can
+filter Notion for "Completed" (hot) vs. stalled at Lesson 1. Re-running refreshes
+scores for everyone.
 
 ```bash
 export SUPABASE_SERVICE_KEY="..."   # Supabase → Settings → API → service_role (SECRET)
