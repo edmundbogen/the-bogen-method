@@ -3,245 +3,54 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0d2540" />
-    <title>The Bogen Method — Claude Code for Realtors | Edmund's Mastermind</title>
-    <meta
-      name="description"
-      content="An interactive Claude Code course for luxury real estate agents — built and battle-tested inside St Andrews Country Club. Taught by Edmund Bogen, Douglas Elliman."
-    />
-
-    <!-- Open Graph / social share -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Edmund's Mastermind" />
-    <meta property="og:title" content="The Bogen Method™ — Claude Code for Realtors" />
-    <meta
-      property="og:description"
-      content="An interactive Claude Code course for luxury real estate agents — 3 episodes, 12 lessons, 17 badges, 1 boss fight. Run your entire business from one terminal window."
-    />
-    <meta property="og:url" content="https://edmundbogen.github.io/the-bogen-method/" />
-    <meta property="og:image" content="https://edmundbogen.github.io/the-bogen-method/assets/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="The Bogen Method™ — Claude Code for Realtors" />
-    <meta
-      name="twitter:description"
-      content="An interactive Claude Code course for luxury real estate agents. 3 episodes · 12 lessons · 17 badges."
-    />
-    <meta name="twitter:image" content="https://edmundbogen.github.io/the-bogen-method/assets/og-image.png" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <title>The Bogen Method™ has moved → bogen.ai/method</title>
+    <!-- Canonical home is now bogen.ai/method — consolidate SEO authority there. -->
+    <link rel="canonical" href="https://www.bogen.ai/method/" />
+    <meta name="robots" content="noindex, follow" />
+    <!-- Instant redirect, preserving any #hash route (e.g. #ep1, #lesson:2.4). -->
+    <meta http-equiv="refresh" content="0; url=https://www.bogen.ai/method/" />
+    <script>
+      (function () {
+        var hash = window.location.hash || "";
+        window.location.replace("https://www.bogen.ai/method/" + hash);
+      })();
+    </script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0d2540;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+        text-align: center;
+        padding: 24px;
+      }
+      a {
+        color: #00a8e1;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .eb {
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #00a8e1;
+        margin-bottom: 10px;
+      }
+    </style>
   </head>
   <body>
-    <!-- ============ ENROLL GATE ============ -->
-    <section id="gate" class="screen screen--gate active">
-      <div class="gate-bg" aria-hidden="true">
-        <div class="gate-grid"></div>
-        <div class="gate-glow"></div>
-      </div>
-      <div class="gate-inner">
-        <div class="gate-card">
-          <div class="gate-brand">
-            <div class="logo-mark" aria-hidden="true">
-              <svg viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="46" stroke="currentColor" stroke-width="2.5" />
-                <text x="50" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="34" fill="currentColor" letter-spacing="-1">EB</text>
-              </svg>
-            </div>
-            <div>
-              <div class="eyebrow">Edmund's Mastermind</div>
-              <div class="brand-name">The Edmund Bogen Team</div>
-            </div>
-          </div>
-
-          <div class="badge-row">
-            <span class="pill pill--accent">Interactive Course · 2026</span>
-            <span class="pill">12 lessons</span>
-            <span class="pill">40+ live prompts</span>
-          </div>
-
-          <h1 class="gate-title">
-            The Bogen Method<span class="gate-title-trade">™</span>
-          </h1>
-          <p class="gate-tagline">
-            An interactive Claude Code course for luxury real estate agents — built and battle-tested inside St Andrews Country Club.
-            Earn XP. Unlock badges. Run your entire business from one terminal window.
-          </p>
-
-          <ul class="gate-stats">
-            <li><strong>3</strong>Episodes</li>
-            <li><strong>12</strong>Lessons</li>
-            <li><strong>17</strong>Badges</li>
-            <li><strong>1</strong>Boss fight</li>
-          </ul>
-
-          <form id="enrollForm" class="gate-form" autocomplete="on" novalidate>
-            <div class="form-row">
-              <label for="fullName">Your full name</label>
-              <input id="fullName" name="fullName" type="text" required placeholder="Edmund Bogen" autocomplete="name" />
-            </div>
-            <div class="form-row">
-              <label for="email">Your email</label>
-              <input id="email" name="email" type="email" required placeholder="you@yourbrokerage.com" autocomplete="email" />
-            </div>
-            <div class="form-row form-row--split">
-              <div>
-                <label for="brokerage">Brokerage <span class="muted">(optional)</span></label>
-                <input id="brokerage" name="brokerage" type="text" placeholder="Douglas Elliman" autocomplete="organization" />
-              </div>
-              <div>
-                <label for="market">Primary market <span class="muted">(optional)</span></label>
-                <input id="market" name="market" type="text" placeholder="Boca Raton, FL" />
-              </div>
-            </div>
-
-            <label class="checkbox-row">
-              <input id="consent" type="checkbox" required />
-              <span>I'd like Edmund's Mastermind to send me Claude Code tips and event invites. Unsubscribe anytime.</span>
-            </label>
-
-            <button id="enrollBtn" type="submit" class="btn btn--primary btn--full">
-              <span>Start Episode 1</span>
-              <span class="btn-arrow">→</span>
-            </button>
-          </form>
-
-          <p class="gate-fineprint">
-            Already enrolled? Progress is saved on this device.
-            <button id="resumeBtn" class="link-btn" type="button">Resume your game →</button>
-          </p>
-        </div>
-
-        <aside class="gate-quote">
-          <div class="gate-quote-mark">"</div>
-          <blockquote>
-            While my competitors debate whether AI will replace them, I'm using it to replace their market share.
-          </blockquote>
-          <cite>
-            <strong>Edmund Bogen</strong>
-            <span>Douglas Elliman · #1 in Saint Andrews Country Club</span>
-          </cite>
-          <div class="gate-quote-stats">
-            <div><strong>14,000+</strong><span>Mastermind members</span></div>
-            <div><strong>$1.85M</strong><span>Avg Boca SFH 2026</span></div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- ============ MAIN APP ============ -->
-    <div id="app" class="app" hidden>
-      <header class="topbar">
-        <div class="topbar-inner">
-          <a class="topbar-brand" href="#" data-route="home">
-            <svg class="topbar-logo" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-              <circle cx="50" cy="50" r="46" stroke="currentColor" stroke-width="2.5" />
-              <text x="50" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="34" fill="currentColor" letter-spacing="-1">EB</text>
-            </svg>
-            <span>The Bogen Method</span>
-          </a>
-          <nav class="topbar-nav" id="topbarNav">
-            <a href="#" data-route="home">Home</a>
-            <a href="#" data-route="ep1">Episode 1</a>
-            <a href="#" data-route="ep2">Episode 2</a>
-            <a href="#" data-route="ep3">Episode 3</a>
-            <a href="#" data-route="tools">Tools</a>
-            <a href="#" data-route="vault">Vault</a>
-            <a href="#" data-route="badges">Badges</a>
-          </nav>
-          <div class="topbar-user">
-            <div class="hud">
-              <div class="hud-item" title="Your level">
-                <span class="hud-label">LVL</span>
-                <span id="hudLevel" class="hud-value">1</span>
-              </div>
-              <div class="hud-item hud-item--xp" title="Experience points">
-                <span class="hud-label">XP</span>
-                <span id="hudXP" class="hud-value">0</span>
-                <div class="hud-xpbar"><div id="hudXPFill" class="hud-xpbar-fill"></div></div>
-              </div>
-              <div class="hud-item hud-item--streak" title="Daily streak">
-                <span class="hud-flame">🔥</span>
-                <span id="hudStreak" class="hud-value">0</span>
-              </div>
-            </div>
-            <button id="userMenuBtn" class="user-menu-btn" aria-label="Account menu">
-              <span id="userInitial">E</span>
-            </button>
-            <div id="userMenu" class="user-menu" hidden>
-              <div class="user-menu-head">
-                <div id="userMenuName"></div>
-                <div id="userMenuEmail" class="muted"></div>
-              </div>
-              <button data-route="vault">My Vault</button>
-              <button data-route="badges">Badges & Stats</button>
-              <button id="exportBtn">Export progress</button>
-              <button id="resetBtn" class="danger">Sign out / reset</button>
-            </div>
-          </div>
-        </div>
-        <div class="topbar-progress"><div id="totalProgress" class="topbar-progress-fill"></div></div>
-      </header>
-
-      <main id="view" class="view"></main>
-
-      <footer class="footer">
-        <div class="footer-inner">
-          <div>
-            <div class="footer-brand">The Edmund Bogen Team</div>
-            <div class="footer-sub">at Douglas Elliman Real Estate · Boca Raton, FL</div>
-          </div>
-          <div class="footer-meta">
-            <span>© 2026 Edmund's Mastermind</span>
-            <span class="dot">·</span>
-            <a href="mailto:edmund@bogenhomes.com">edmund@bogenhomes.com</a>
-            <span class="dot">·</span>
-            <a href="tel:5612357575">561-235-7575</a>
-          </div>
-        </div>
-      </footer>
+    <div>
+      <div class="eb">Edmund's Mastermind</div>
+      <h1>The Bogen Method™ has a new home</h1>
+      <p>
+        Redirecting you to
+        <a href="https://www.bogen.ai/method/">bogen.ai/method</a>…
+      </p>
+      <p>If you aren't redirected, <a href="https://www.bogen.ai/method/">click here</a>.</p>
     </div>
-
-    <!-- ============ TOAST + XP POPS ============ -->
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <div id="xpStage" class="xp-stage" aria-hidden="true"></div>
-
-    <!-- ============ MODAL ============ -->
-    <div id="modal" class="modal" hidden>
-      <div class="modal-backdrop" data-close></div>
-      <div class="modal-panel" role="dialog" aria-modal="true">
-        <button class="modal-close" id="modalClose" aria-label="Close">×</button>
-        <div id="modalBody"></div>
-      </div>
-    </div>
-
-    <!-- ============ BADGE UNLOCK OVERLAY ============ -->
-    <div id="badgeOverlay" class="badge-overlay" hidden>
-      <div class="badge-overlay-inner">
-        <div class="badge-overlay-rays"></div>
-        <div id="badgeOverlayIcon" class="badge-overlay-icon"></div>
-        <div class="badge-overlay-label">Badge unlocked</div>
-        <div id="badgeOverlayName" class="badge-overlay-name"></div>
-        <div id="badgeOverlayDesc" class="badge-overlay-desc"></div>
-        <button id="badgeOverlayBtn" class="btn btn--primary">Claim +50 XP</button>
-      </div>
-    </div>
-
-    <script src="js/config.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/state.js"></script>
-    <script src="js/cloud.js"></script>
-    <script src="js/sfx.js"></script>
-    <script src="js/components.js"></script>
-    <script src="js/lessons.js"></script>
-    <script src="js/tools.js"></script>
-    <script src="js/app.js"></script>
   </body>
 </html>
