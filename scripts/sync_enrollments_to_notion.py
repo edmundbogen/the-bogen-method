@@ -83,8 +83,8 @@ def _supabase_get(path):
 
 def fetch_enrollments():
     return _supabase_get("enrollments"
-                         "?select=email,full_name,brokerage,market,created_at"
-                         "&order=created_at.asc")
+                         "?select=email,full_name,brokerage,market,enrolled_at"
+                         "&order=enrolled_at.asc")
 
 
 def fetch_progress():
@@ -158,7 +158,7 @@ def progress_props(prog):
 def create_contact(enr, prog):
     name = (enr.get("full_name") or "").strip() or "Unknown enrollee"
     email = (enr.get("email") or "").strip()
-    date = (enr.get("created_at") or "")[:10] or None
+    date = (enr.get("enrolled_at") or "")[:10] or None
     props = {
         "Name": {"title": [{"text": {"content": name}}]},
         "Email": {"email": email},
